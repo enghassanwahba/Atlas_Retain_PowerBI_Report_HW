@@ -158,27 +158,35 @@ CALCULATE(
 
 Computes the structural loss coefficient by dividing total inactive exit volume by the aggregate employee footprint:
 dax Attretion Rate = [InActive Employee]/[Total Employee] 
+
 --- 🔹 5. Last Review Date
 Retrieves the most recent evaluation date logged for an employee, and returns a placeholder text string if no record exists:
 dax Last Review Date = IF( MAX(PerformanceRating[ReviewDate])= BLANK(), "no rewiew yet", MAX(PerformanceRating[ReviewDate]) ) 
+
 --- 🔹 6. Next Review Date
 An advanced measure that utilizes a local variable (Var) to check an employee's history. It calculates the next review deadline by adding a fixed 365-day fiscal window to either their last review date or their original hire date:
 dax Next Review = Var hire_or_review= IF( MAX(PerformanceRating[ReviewDate])=BLANK(), MAX(DimEmployee[HireDate]), MAXA(PerformanceRating[ReviewDate]) ) RETURN 365+hire_or_review 
+
 --- 🔹 7. Job Satisfaction Index (JobSatisfaction)
 Extracts the maximum recorded satisfaction score per cohort while forcing a relationship override with the dimension lookup file:
-dax JobSatisfaction = CALCULATE( MAX(PerformanceRating[JobSatisfaction]), USERELATIONSHIP(PerformanceRating[JobSatisfaction],SatisfiedLevel[SatisfactionID]) ) 
+dax JobSatisfaction = CALCULATE( MAX(PerformanceRating[JobSatisfaction]), USERELATIONSHIP(PerformanceRating[JobSatisfaction],SatisfiedLevel[SatisfactionID]) )
+
 --- 🔹 8. Environment Comfort Index (EnvironmentSatisfaction)
 Extracts physical workspace comfort parameters while activating the non-active relationship line leading to the satisfaction mapping table:
 dax EnvironmentSatisfaction = CALCULATE( MAX(PerformanceRating[EnvironmentSatisfaction]), USERELATIONSHIP(PerformanceRating[EnvironmentSatisfaction],SatisfiedLevel[SatisfactionID]) ) 
+
 --- 🔹 9. Relationship Morale Index (RelationshipSatisfaction)
 Tracks internal peer relationship sentiment scores while managing relationship pathways down to the target dimension table:
-dax RelationshipSatisfaction = CALCULATE( MAX(PerformanceRating[RelationshipSatisfaction]), USERELATIONSHIP(PerformanceRating[RelationshipSatisfaction],SatisfiedLevel[SatisfactionID]) ) 
+dax RelationshipSatisfaction = CALCULATE( MAX(PerformanceRating[RelationshipSatisfaction]), USERELATIONSHIP(PerformanceRating[RelationshipSatisfaction],SatisfiedLevel[SatisfactionID]) )
+
 --- 🔹 10. Work-Life Balance Index (WorkLifeBalanceSatisfaction)
 Computes personal and professional alignment scores while routing data validation queries down to the centralized satisfaction lookup index:
 dax WorkLifeBalanceSatisfaction = CALCULATE( MAX(PerformanceRating[WorkLifeBalance]), USERELATIONSHIP(PerformanceRating[WorkLifeBalance],SatisfiedLevel[SatisfactionID]) ) 
+
 --- 🔹 11. Manager Evaluation Score (ManagerRating)
 Tracks annual employee performance scores assigned by their direct line manager while applying relationship overrides to the evaluation table:
 dax ManagerRating = CALCULATE(MAX(PerformanceRating[ManagerRating]), USERELATIONSHIP(PerformanceRating[ManagerRating],RatingLevel[RatingID]) ) 
+
 --- 🔹 12. Self Evaluation Score (SelfRating)
 Retrieves the maximum performance rating an employee assigns to their own output, utilizing an alternative relationship path to the lookup table:
 dax SelfRating = CALCULATE(MAX(PerformanceRating[SelfRating]), USERELATIONSHIP(PerformanceRating[SelfRating],RatingLevel[RatingID]) ) 
